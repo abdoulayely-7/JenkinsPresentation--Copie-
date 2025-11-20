@@ -41,7 +41,7 @@ pipeline {
 
         stage('Login & Push Docker image') {
             steps {
-                withCredentials([usernamePassword(credentialsId: 'docker-credentiel', usernameVariable: 'DOCKER_USER', passwordVariable: 'DOCKER_PASS')]) {
+                withCredentials([usernamePassword(credentialsId: 'dockerhub-credentials', usernameVariable: 'DOCKER_USER', passwordVariable: 'DOCKER_PASS')]) {
                     sh '''
                         echo "$DOCKER_PASS" | docker login -u "$DOCKER_USER" --password-stdin
                         docker push $DOCKERHUB_REPO:latest
@@ -50,15 +50,15 @@ pipeline {
             }
         }
 
-        stage('Deploy to Render') {
-            steps {
-                withCredentials([string(credentialsId: 'render-deploy-hook', variable: 'RENDER_HOOK_URL')]) {
-                    sh '''
-                        curl -X POST $RENDER_HOOK_URL
-                    '''
-                }
-            }
-        }
+        // stage('Deploy to Render') {
+        //     steps {
+        //         withCredentials([string(credentialsId: 'render-deploy-hook', variable: 'RENDER_HOOK_URL')]) {
+        //             sh '''
+        //                 curl -X POST $RENDER_HOOK_URL
+        //             '''
+        //         }
+        //     }
+        // }
 
 
     }
